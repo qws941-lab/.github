@@ -31,8 +31,10 @@ group:
       - source: .github/workflows/labeler.yml
         dest: .github/workflows/labeler.yml
     repos: |
+      qws941/aimo3-prize
       qws941/blacklist
       qws941/hycu_fsds
+      qws941/opencode
       qws941/propose
       qws941/qws941
       qws941/resume
@@ -47,8 +49,10 @@ group:
       - source: .github/workflows/auto-merge.yml
         dest: .github/workflows/auto-merge.yml
     repos: |
+      qws941/aimo3-prize
       qws941/blacklist
       qws941/hycu_fsds
+      qws941/opencode
       qws941/propose
       qws941/qws941
       qws941/resume
@@ -62,8 +66,10 @@ group:
       - source: .github/workflows/codex-auto-issue.yml
         dest: .github/workflows/codex-auto-issue.yml
     repos: |
+      qws941/aimo3-prize
       qws941/blacklist
       qws941/hycu_fsds
+      qws941/opencode
       qws941/propose
       qws941/qws941
       qws941/resume
