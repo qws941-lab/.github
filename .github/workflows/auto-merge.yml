@@ -35,7 +35,8 @@ jobs:
         run: |
           AUTHOR=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
             --json author --jq '.author.login')
-          if echo "$AUTHOR" | grep -q '\[bot\]'; then
+          # Codex bot login is 'Codex' (type: Bot), not '[bot]' suffix
+          if [ "$AUTHOR" = "Codex" ]; then
             echo "codex=true" >> "$GITHUB_OUTPUT"
           else
             echo "codex=false" >> "$GITHUB_OUTPUT"
