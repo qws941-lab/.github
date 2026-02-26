@@ -64,9 +64,9 @@ body:
       description: |
         Relevant environment details.
       placeholder: |
-        - OS: Ubuntu 22.04
-        - Terraform: 1.9.x
-        - Node.js: 20.x
+        - OS: e.g. Ubuntu 22.04, macOS 14
+        - Runtime: e.g. Node.js 20.x, Python 3.12
+        - Tool version: e.g. Terraform 1.9, Docker 27
     validations:
       required: false
 

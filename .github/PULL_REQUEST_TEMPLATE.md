@@ -31,7 +31,7 @@
 
 - [ ] Tested locally
 - [ ] CI checks pass
-- [ ] `terraform plan` shows expected diff (if applicable)
+- [ ] Infrastructure changes verified (`terraform plan`, deploy preview, etc.) — if applicable
 - [ ] Manual verification on staging/prod
 
 ## Breaking Changes
