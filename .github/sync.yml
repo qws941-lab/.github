@@ -30,6 +30,8 @@ group:
         dest: .github/workflows/stale.yml
       - source: .github/workflows/labeler.yml
         dest: .github/workflows/labeler.yml
+      - source: AGENTS.md
+        dest: AGENTS.md
     repos: |
       qws941/aimo3-prize
       qws941/blacklist

@@ -5,11 +5,14 @@ on:
     branches: [master]
     paths:
       - 'OWNERS'
+      - 'AGENTS.md'
       - 'LICENSE'
       - '.editorconfig'
-      - '.github/CODEOWNERS'
-      - '.github/dependabot.yml'
       - '.github/sync.yml'
+      - '.github/labeler.yml'
+      - '.github/workflows/stale.yml'
+      - '.github/workflows/labeler.yml'
+      - '.github/workflows/auto-merge.yml'
   workflow_dispatch:
 
 jobs:
