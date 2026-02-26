@@ -14,6 +14,18 @@ on:
       - '.github/workflows/labeler.yml'
       - '.github/workflows/auto-merge.yml'
       - '.github/workflows/codex-triage.yml'
+      - '.github/workflows/welcome.yml'
+      - '.github/workflows/lock-threads.yml'
+      - '.github/workflows/commitlint.yml'
+      - '.github/workflows/pr-size.yml'
+      - '.github/workflows/release-drafter.yml'
+      - '.github/release-drafter.yml'
+      - '.github/workflows/codex-auto-issue.yml'
+      - '.github/FUNDING.yml'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - '.github/ISSUE_TEMPLATE/bug_report.yml'
+      - '.github/ISSUE_TEMPLATE/feature_request.yml'
+      - '.github/ISSUE_TEMPLATE/config.yml'
   workflow_dispatch:
 
 jobs:
@@ -29,5 +41,5 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
           COMMIT_PREFIX: "chore: "
           PR_LABELS: "sync"
-          ASSIGNEES: "qws941"
+          ASSIGNEES: "${{ github.repository_owner }}"
           COMMIT_EACH_FILE: false

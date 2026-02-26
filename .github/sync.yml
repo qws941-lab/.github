@@ -4,16 +4,15 @@
 #
 # Synced files (truly common across all repos):
 #   - OWNERS, LICENSE, .editorconfig (governance)
-#   - .github/labeler.yml (PR auto-labeling)
-#   - .github/workflows/stale.yml (stale issue cleanup)
-#   - .github/workflows/labeler.yml (labeler workflow)
-#   - .github/workflows/auto-merge.yml (dependabot/owner/codex auto-merge)
-#   - .github/workflows/codex-auto-issue.yml (codex issue automation)
+#   - .github/FUNDING.yml, PULL_REQUEST_TEMPLATE.md (community)
+#   - .github/ISSUE_TEMPLATE/* (bug report, feature request, config)
+#   - .github/labeler.yml, release-drafter.yml (PR config)
+#   - .github/workflows/* (stale, labeler, auto-merge, codex-*, welcome,
+#     lock-threads, commitlint, pr-size, release-drafter)
 #
 # NOT synced (repo-specific):
 #   - .github/dependabot.yml  (different ecosystems per repo)
 #   - .github/CODEOWNERS      (terraform has custom rules)
-#   - .github/copilot-instructions.md (repo-specific context)
 
 group:
   # Group 1: Core governance + workflows → all owned repos
@@ -34,6 +33,28 @@ group:
         dest: AGENTS.md
       - source: .github/workflows/codex-triage.yml
         dest: .github/workflows/codex-triage.yml
+      - source: .github/workflows/welcome.yml
+        dest: .github/workflows/welcome.yml
+      - source: .github/workflows/lock-threads.yml
+        dest: .github/workflows/lock-threads.yml
+      - source: .github/workflows/commitlint.yml
+        dest: .github/workflows/commitlint.yml
+      - source: .github/workflows/pr-size.yml
+        dest: .github/workflows/pr-size.yml
+      - source: .github/workflows/release-drafter.yml
+        dest: .github/workflows/release-drafter.yml
+      - source: .github/release-drafter.yml
+        dest: .github/release-drafter.yml
+      - source: .github/FUNDING.yml
+        dest: .github/FUNDING.yml
+      - source: .github/PULL_REQUEST_TEMPLATE.md
+        dest: .github/PULL_REQUEST_TEMPLATE.md
+      - source: .github/ISSUE_TEMPLATE/bug_report.yml
+        dest: .github/ISSUE_TEMPLATE/bug_report.yml
+      - source: .github/ISSUE_TEMPLATE/feature_request.yml
+        dest: .github/ISSUE_TEMPLATE/feature_request.yml
+      - source: .github/ISSUE_TEMPLATE/config.yml
+        dest: .github/ISSUE_TEMPLATE/config.yml
     repos: |
       qws941/aimo3-prize
       qws941/blacklist

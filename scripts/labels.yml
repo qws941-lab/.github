@@ -75,3 +75,37 @@
 - name: "status:duplicate"
   color: "cfd3d7"
   description: "Duplicate of another issue"
+
+# Size labels (auto-applied by pr-size.yml workflow)
+- name: "size/xs"
+  color: "3cbf00"
+  description: "Extra small PR (≤10 lines)"
+
+- name: "size/s"
+  color: "5d9801"
+  description: "Small PR (≤100 lines)"
+
+- name: "size/m"
+  color: "7f7203"
+  description: "Medium PR (≤200 lines)"
+
+- name: "size/l"
+  color: "a14c05"
+  description: "Large PR (≤500 lines)"
+
+- name: "size/xl"
+  color: "c32607"
+  description: "Extra large PR (>500 lines)"
+
+# Automation labels
+- name: "sync"
+  color: "0e8a16"
+  description: "File sync PR from .github SSoT"
+
+- name: "auto-merge"
+  color: "0e8a16"
+  description: "PR approved for automatic merge"
+
+- name: "codex"
+  color: "7057ff"
+  description: "Codex AI automation trigger"
