@@ -69,7 +69,7 @@ group:
       qws941/tmux
       qws941/youtube
 
-  # Group 2: Auto-merge → all repos except terraform (has custom risk-based auto-merge)
+  # Group 2: Auto-merge → all repos
   - files:
       - source: .github/workflows/auto-merge.yml
         dest: .github/workflows/auto-merge.yml
@@ -85,6 +85,7 @@ group:
       qws941/splunk
       qws941/tmux
       qws941/youtube
+      qws941/terraform
 
   # Group 3: Codex auto-issue → all repos (generic, no repo-specific logic)
   - files:
