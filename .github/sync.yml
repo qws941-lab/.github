@@ -32,6 +32,8 @@ group:
         dest: .github/workflows/labeler.yml
       - source: AGENTS.md
         dest: AGENTS.md
+      - source: .github/workflows/codex-triage.yml
+        dest: .github/workflows/codex-triage.yml
     repos: |
       qws941/aimo3-prize
       qws941/blacklist

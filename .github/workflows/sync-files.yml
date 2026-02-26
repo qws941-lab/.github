@@ -13,6 +13,7 @@ on:
       - '.github/workflows/stale.yml'
       - '.github/workflows/labeler.yml'
       - '.github/workflows/auto-merge.yml'
+      - '.github/workflows/codex-triage.yml'
   workflow_dispatch:
 
 jobs:

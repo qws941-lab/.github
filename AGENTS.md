@@ -69,7 +69,7 @@ GitHub community health files **Single Source of Truth (SSoT)** for all `qws941`
 
 This repo is the canonical source. Changes propagate automatically:
 
-- **Sync trigger**: Push to `master` on paths: `OWNERS`, `LICENSE`, `.editorconfig`, `AGENTS.md`, `.github/sync.yml`
+- **Sync trigger**: Push to `master` on paths: `OWNERS`, `LICENSE`, `.editorconfig`, `AGENTS.md`, `.github/sync.yml`, `.github/workflows/codex-triage.yml`
 - **Sync engine**: `BetaHuhn/repo-file-sync-action` via `.github/workflows/sync-files.yml`
 - **Sync PRs**: Prefixed `chore: `, labeled `sync`, assigned to `qws941`
 
@@ -85,6 +85,7 @@ This repo is the canonical source. Changes propagate automatically:
 | `.github/workflows/labeler.yml`    | All 10 repos                            |
 | `.github/workflows/auto-merge.yml` | 9 repos (excludes `terraform` — custom) |
 | `AGENTS.md`                        | All 10 repos                            |
+| `.github/workflows/codex-triage.yml`| All 10 repos                            |
 
 **NOT synced** (repo-specific by design):
 
@@ -94,7 +95,7 @@ This repo is the canonical source. Changes propagate automatically:
 
 ### Sync Target Repos
 
-`blacklist`, `hycu_fsds`, `propose`, `qws941`, `resume`, `safework2`, `splunk`, `terraform`, `tmux`, `youtube`
+`blacklist`, `hycu_fsds`, `propose`, `qws941`, `resume`, `safetywallet`, `splunk`, `terraform`, `tmux`, `youtube`
 
 ### Reusable Workflows
 
