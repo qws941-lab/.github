@@ -18,12 +18,9 @@
 
 set -euo pipefail
 
-readonly ORG="${GITHUB_ORG:-qws941}"
-readonly CONFIG_REPOS="${RULESET_CONFIG_REPOS:-.github qws941}"
-readonly EXCLUDED_REPOS="${RULESET_EXCLUDED_REPOS:-terraform}"
-
-# Bypass actors: Admin (RepositoryRole 5), OpenAI Codex connector (1144995), OpenCode agent (1549082)
-readonly BYPASS_ACTORS='[{"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}, {"actor_id": 1144995, "actor_type": "Integration", "bypass_mode": "always"}, {"actor_id": 1549082, "actor_type": "Integration", "bypass_mode": "always"}]'
+readonly ORG="qws941"
+readonly CONFIG_REPOS=".github qws941"
+readonly EXCLUDED_REPOS="terraform"
 
 DRY_RUN=false
 DELETE_ALL=false
@@ -211,23 +208,23 @@ build_default_branch_payload() {
     rules=$(echo "$rules" | jq --argjson sc "$status_checks" '. + [$sc]')
   fi
 
-  jq -n --argjson rules "$rules" --argjson bypass "$BYPASS_ACTORS" '{
+  jq -n --argjson rules "$rules" '{
     name: "default-branch-protection",
     target: "branch",
     enforcement: "active",
     conditions: {ref_name: {include: ["~DEFAULT_BRANCH"], exclude: []}},
-    bypass_actors: $bypass,
+    bypass_actors: [{actor_id: 5, actor_type: "RepositoryRole", bypass_mode: "always"}, {actor_id: 1144995, actor_type: "Integration", bypass_mode: "always"}, {actor_id: 1549082, actor_type: "Integration", bypass_mode: "always"}],
     rules: $rules
   }'
 }
 
 build_code_scanning_payload() {
-  jq -n --argjson bypass "$BYPASS_ACTORS" '{
+  jq -n '{
     name: "code-scanning",
     target: "branch",
     enforcement: "active",
     conditions: {ref_name: {include: ["~ALL"], exclude: []}},
-    bypass_actors: $bypass,
+    bypass_actors: [{actor_id: 5, actor_type: "RepositoryRole", bypass_mode: "always"}, {actor_id: 1144995, actor_type: "Integration", bypass_mode: "always"}, {actor_id: 1549082, actor_type: "Integration", bypass_mode: "always"}],
     rules: [{
       type: "code_scanning",
       parameters: {
@@ -242,12 +239,12 @@ build_code_scanning_payload() {
 }
 
 build_tag_protection_payload() {
-  jq -n --argjson bypass "$BYPASS_ACTORS" '{
+  jq -n '{
     name: "tag-protection",
     target: "tag",
     enforcement: "active",
     conditions: {ref_name: {include: ["refs/tags/v*"], exclude: []}},
-    bypass_actors: $bypass,
+    bypass_actors: [{actor_id: 5, actor_type: "RepositoryRole", bypass_mode: "always"}, {actor_id: 1144995, actor_type: "Integration", bypass_mode: "always"}, {actor_id: 1549082, actor_type: "Integration", bypass_mode: "always"}],
     rules: [
       {"type": "creation"},
       {"type": "update"},
