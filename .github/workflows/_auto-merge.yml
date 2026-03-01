@@ -1,0 +1,33 @@
+# Reusable Auto-Merge Workflow
+# SSoT: qws941/.github — do not duplicate in consuming repos
+#
+# Usage:
+#   jobs:
+#     auto-merge:
+#       uses: qws941/.github/.github/workflows/_auto-merge.yml@master
+#       secrets: inherit
+#
+# Required secrets:
+#   - GH_PAT: GitHub Personal Access Token with admin bypass permissions
+
+name: Auto Merge
+
+on:
+  workflow_call:
+
+jobs:
+  auto-merge:
+    name: Auto-merge eligible PRs
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]' ||
+      github.event.pull_request.user.login == github.repository_owner ||
+      contains(github.event.pull_request.labels.*.name, 'auto-merge') ||
+      contains(github.event.pull_request.labels.*.name, 'codex') ||
+      contains(github.event.pull_request.labels.*.name, 'sync')
+    steps:
+      - name: Merge
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge "$PR_URL" --squash --admin

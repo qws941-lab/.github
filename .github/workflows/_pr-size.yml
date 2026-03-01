@@ -1,0 +1,36 @@
+# Reusable PR Size Labeler Workflow
+# SSoT: qws941/.github — do not duplicate in consuming repos
+#
+# Usage:
+#   jobs:
+#     pr-size:
+#       uses: qws941/.github/.github/workflows/_pr-size.yml@master
+
+name: PR Size
+
+on:
+  workflow_call:
+
+jobs:
+  pr-size:
+    name: Label PR size
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label size
+        uses: CodelyTV/pr-size-labeler@4ec67706cd878fbc1c8db0a5dcd28b6bb412e85a # v1
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          xs_label: 'size/xs'
+          xs_max_size: '10'
+          s_label: 'size/s'
+          s_max_size: '100'
+          m_label: 'size/m'
+          m_max_size: '200'
+          l_label: 'size/l'
+          l_max_size: '500'
+          xl_label: 'size/xl'
+          fail_if_xl: 'false'
+          files_to_ignore: |
+            package-lock.json
+            pnpm-lock.yaml
+            yarn.lock

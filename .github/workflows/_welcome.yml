@@ -1,0 +1,28 @@
+# Reusable First Interaction Welcome Workflow
+# SSoT: qws941/.github — do not duplicate in consuming repos
+#
+# Usage:
+#   jobs:
+#     welcome:
+#       uses: qws941/.github/.github/workflows/_welcome.yml@master
+
+name: Welcome
+
+on:
+  workflow_call:
+
+jobs:
+  welcome:
+    name: Welcome first-time contributors
+    runs-on: ubuntu-latest
+    steps:
+      - name: Welcome
+        uses: actions/first-interaction@fb2402657b4a28582200150d0a145671d0e50597 # v1
+        with:
+          repo-token: ${{ github.token }}
+          issue-message: |
+            Thanks for opening your first issue! 🎉
+            We'll take a look as soon as possible.
+          pr-message: |
+            Thanks for your first pull request! 🎉
+            We'll review it as soon as possible.

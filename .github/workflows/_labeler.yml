@@ -1,0 +1,23 @@
+# Reusable PR Labeler Workflow
+# SSoT: qws941/.github — do not duplicate in consuming repos
+#
+# Usage:
+#   jobs:
+#     labeler:
+#       uses: qws941/.github/.github/workflows/_labeler.yml@master
+
+name: PR Labeler
+
+on:
+  workflow_call:
+
+jobs:
+  labeler:
+    name: Label PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label
+        uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
+        with:
+          repo-token: ${{ github.token }}
+          sync-labels: true

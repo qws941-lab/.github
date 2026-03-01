@@ -2,20 +2,26 @@
 # SSoT: qws941/.github — changes here auto-sync to all repos via PR
 # Docs: https://github.com/BetaHuhn/repo-file-sync-action
 #
+# Architecture:
+#   - Reusable templates (_*.yml) live ONLY in this repo (not synced)
+#   - Thin callers (*.yml) are synced to all repos via this config
+#   - Callers reference templates via: uses: qws941/.github/.github/workflows/_*.yml@master
+#
 # Synced files (truly common across all repos):
 #   - OWNERS, LICENSE, .editorconfig (governance)
+#   - AGENTS.md (project knowledge base)
 #   - .github/FUNDING.yml, PULL_REQUEST_TEMPLATE.md (community)
 #   - .github/ISSUE_TEMPLATE/* (bug report, feature request, config)
 #   - .github/labeler.yml, release-drafter.yml (PR config)
-#   - .github/workflows/* (stale, labeler, auto-merge, codex-*, welcome,
-#     lock-threads, commitlint, pr-size, release-drafter)
+#   - .github/workflows/* (thin callers for all shared workflows)
 #
 # NOT synced (repo-specific):
 #   - .github/dependabot.yml  (different ecosystems per repo)
 #   - .github/CODEOWNERS      (terraform has custom rules)
+#   - .github/workflows/_*.yml (reusable templates, consumed cross-repo)
 
 group:
-  # Group 1: Core governance + workflows → all owned repos
+  # Group 1: Core governance + workflow callers → all owned repos
   - files:
       - source: OWNERS
         dest: OWNERS
@@ -23,26 +29,10 @@ group:
         dest: LICENSE
       - source: .editorconfig
         dest: .editorconfig
-      - source: .github/labeler.yml
-        dest: .github/labeler.yml
-      - source: .github/workflows/stale.yml
-        dest: .github/workflows/stale.yml
-      - source: .github/workflows/labeler.yml
-        dest: .github/workflows/labeler.yml
       - source: AGENTS.md
         dest: AGENTS.md
-      - source: .github/workflows/codex-triage.yml
-        dest: .github/workflows/codex-triage.yml
-      - source: .github/workflows/welcome.yml
-        dest: .github/workflows/welcome.yml
-      - source: .github/workflows/lock-threads.yml
-        dest: .github/workflows/lock-threads.yml
-      - source: .github/workflows/commitlint.yml
-        dest: .github/workflows/commitlint.yml
-      - source: .github/workflows/pr-size.yml
-        dest: .github/workflows/pr-size.yml
-      - source: .github/workflows/release-drafter.yml
-        dest: .github/workflows/release-drafter.yml
+      - source: .github/labeler.yml
+        dest: .github/labeler.yml
       - source: .github/release-drafter.yml
         dest: .github/release-drafter.yml
       - source: .github/FUNDING.yml
@@ -55,42 +45,28 @@ group:
         dest: .github/ISSUE_TEMPLATE/feature_request.yml
       - source: .github/ISSUE_TEMPLATE/config.yml
         dest: .github/ISSUE_TEMPLATE/config.yml
-    repos: |
-      qws941/aimo3-prize
-      qws941/blacklist
-      qws941/hycu_fsds
-      qws941/opencode
-      qws941/propose
-      qws941/qws941
-      qws941/resume
-      qws941/safetywallet
-      qws941/splunk
-      qws941/terraform
-      qws941/tmux
-      qws941/youtube
-
-  # Group 2: Auto-merge → all repos
-  - files:
+      - source: .github/workflows/stale.yml
+        dest: .github/workflows/stale.yml
+      - source: .github/workflows/labeler.yml
+        dest: .github/workflows/labeler.yml
+      - source: .github/workflows/codex-triage.yml
+        dest: .github/workflows/codex-triage.yml
+      - source: .github/workflows/welcome.yml
+        dest: .github/workflows/welcome.yml
+      - source: .github/workflows/lock-threads.yml
+        dest: .github/workflows/lock-threads.yml
+      - source: .github/workflows/commitlint.yml
+        dest: .github/workflows/commitlint.yml
+      - source: .github/workflows/pr-size.yml
+        dest: .github/workflows/pr-size.yml
+      - source: .github/workflows/release-drafter.yml
+        dest: .github/workflows/release-drafter.yml
       - source: .github/workflows/auto-merge.yml
         dest: .github/workflows/auto-merge.yml
-    repos: |
-      qws941/aimo3-prize
-      qws941/blacklist
-      qws941/hycu_fsds
-      qws941/opencode
-      qws941/propose
-      qws941/qws941
-      qws941/resume
-      qws941/safetywallet
-      qws941/splunk
-      qws941/tmux
-      qws941/youtube
-      qws941/terraform
-
-  # Group 3: Codex auto-issue → all repos (generic, no repo-specific logic)
-  - files:
       - source: .github/workflows/codex-auto-issue.yml
         dest: .github/workflows/codex-auto-issue.yml
+      - source: .github/workflows/opencode.yml
+        dest: .github/workflows/opencode.yml
     repos: |
       qws941/aimo3-prize
       qws941/blacklist

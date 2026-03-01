@@ -1,0 +1,36 @@
+# Reusable Stale Issues/PRs Workflow
+# SSoT: qws941/.github — do not duplicate in consuming repos
+#
+# Usage:
+#   jobs:
+#     stale:
+#       uses: qws941/.github/.github/workflows/_stale.yml@master
+
+name: Stale
+
+on:
+  workflow_call:
+
+jobs:
+  stale:
+    name: Mark stale issues and PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stale
+        uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # v9
+        with:
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has
+            not had recent activity. It will be closed in 5 days if no further
+            activity occurs. If this issue is still relevant, please comment
+            to keep it open.
+          stale-pr-message: >
+            This PR has been automatically marked as stale because it has not
+            had recent activity. It will be closed in 5 days if no further
+            activity occurs. If this PR is still relevant, please comment or
+            push changes to keep it open.
+          days-before-stale: 14
+          days-before-close: 5
+          exempt-issue-labels: 'keep-open,pinned,security'
+          exempt-pr-labels: 'keep-open,pinned,security'
+          remove-stale-when-updated: true

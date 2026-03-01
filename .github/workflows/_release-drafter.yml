@@ -1,0 +1,27 @@
+# Reusable Release Drafter Workflow
+# SSoT: qws941/.github — do not duplicate in consuming repos
+#
+# Usage:
+#   jobs:
+#     draft:
+#       uses: qws941/.github/.github/workflows/_release-drafter.yml@master
+
+name: Release Drafter
+
+on:
+  workflow_call:
+
+jobs:
+  draft:
+    name: Draft release notes
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-drafter
+      cancel-in-progress: true
+    steps:
+      - name: Draft
+        uses: release-drafter/release-drafter@6db134d15f3909ccc9eefd369f02bd1e9cffdf97 # v6
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
