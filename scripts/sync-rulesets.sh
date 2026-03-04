@@ -156,8 +156,10 @@ upsert_ruleset() {
 
 apply_repo_settings() {
   local repo="$1"
-  local payload
-  payload=$(jq -n '{
+
+  # Repo settings
+  local repo_payload
+  repo_payload=$(jq -n '{
     allow_auto_merge: true,
     delete_branch_on_merge: true,
     allow_squash_merge: true,
@@ -170,10 +172,23 @@ apply_repo_settings() {
   if $DRY_RUN; then
     echo -e "  ${YELLOW}[dry-run]${NC} would update repo settings"
   else
-    if gh api -X PATCH "repos/$repo" --input - <<< "$payload" >/dev/null 2>&1; then
+    if gh api -X PATCH "repos/$repo" --input - <<< "$repo_payload" >/dev/null 2>&1; then
       echo -e "  ${GREEN}[updated]${NC} repo settings"
     else
       echo -e "  ${RED}[error]${NC}   repo settings update failed"
+      ERRORS=$((ERRORS + 1))
+    fi
+  fi
+
+  # Actions permissions: allow all actions (no first-time approval required)
+  if $DRY_RUN; then
+    echo -e "  ${YELLOW}[dry-run]${NC} would set allowed_actions=all"
+  else
+    if gh api -X PUT "repos/$repo/actions/permissions" \
+         -f allowed_actions=all -F enabled=true >/dev/null 2>&1; then
+      echo -e "  ${GREEN}[updated]${NC} actions permissions (allowed_actions=all)"
+    else
+      echo -e "  ${RED}[error]${NC}   actions permissions update failed"
       ERRORS=$((ERRORS + 1))
     fi
   fi
