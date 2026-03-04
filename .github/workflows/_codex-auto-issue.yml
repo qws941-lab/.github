@@ -1,6 +1,9 @@
 # Reusable Codex Auto-Issue Workflow
 # SSoT: qws941/.github — do not duplicate in consuming repos
 #
+# When an issue is labeled 'codex', posts an @codex comment and assigns
+# the Codex bot so the issue appears in the Codex assignee view.
+#
 # Usage:
 #   jobs:
 #     codex:
@@ -21,7 +24,7 @@ jobs:
       group: codex-issue-${{ github.event.issue.number }}
       cancel-in-progress: false
     steps:
-      - name: Comment
+      - name: Comment and assign Codex
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
@@ -33,3 +36,15 @@ jobs:
               issue_number: context.issue.number,
               body: `@codex\n\n**Task:** ${title}\n\n**Context:**\n${body}`
             });
+
+            // Assign Codex bot to the issue
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                assignees: ['Codex'],
+              });
+            } catch (error) {
+              core.warning(`Failed to assign Codex: ${error.message}`);
+            }

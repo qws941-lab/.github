@@ -6,6 +6,7 @@
 #   - Label-based matching (elk-alert, health, infrastructure, ci-failure, drift)
 #   - Dedup check (skips if @codex comment already exists)
 #   - Context-aware investigation prompts (ELK, infra, drift, generic)
+#   - Auto-assigns Codex bot to the issue
 #
 # Usage:
 #   jobs:
@@ -61,7 +62,7 @@ jobs:
             const hasCodex = comments.data.some(c => c.body.includes('@codex'));
             return hasCodex ? 'skip' : 'proceed';
 
-      - name: Request Codex investigation
+      - name: Request Codex investigation and assign
         if: steps.dedup.outputs.result == 'proceed'
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
@@ -131,3 +132,15 @@ jobs:
               issue_number: issue.number,
               body: prompt.join('\n'),
             });
+
+            // Assign Codex bot to the issue
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                assignees: ['Codex'],
+              });
+            } catch (error) {
+              core.warning(`Failed to assign Codex: ${error.message}`);
+            }
