@@ -21,7 +21,6 @@ on:
       - '.github/workflows/pr-size.yml'
       - '.github/workflows/release-drafter.yml'
       - '.github/workflows/codex-auto-issue.yml'
-      - '.github/workflows/opencode.yml'
       - '.github/workflows/issue-lifecycle.yml'
       - '.github/workflows/ci-notify-failure.yml'
       - '.github/workflows/auto-approve-runs.yml'
