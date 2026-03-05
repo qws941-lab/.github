@@ -5,7 +5,7 @@ on:
     branches: [master]
     paths:
       - 'scripts/labels.yml'
-      - 'scripts/sync-labels.sh'
+      - 'scripts/sync-labels.go'
   workflow_dispatch:
 
 permissions:
@@ -18,10 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Install pyyaml
-        run: pip install pyyaml
+      - name: Set up Go
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version: '1.22'
 
       - name: Sync labels
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: bash scripts/sync-labels.sh
+        run: go run scripts/sync-labels.go
