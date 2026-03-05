@@ -67,7 +67,7 @@ jobs:
               });
 
               const syncRuns = failedRuns.workflow_runs.filter(
-                r => r.actor?.login === 'github-actions[bot]' || r.actor?.login === 'qws941'
+                r => r.actor?.login === 'github-actions[bot]' || r.actor?.login === context.repo.owner
               );
 
               for (const run of syncRuns) {

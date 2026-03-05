@@ -41,6 +41,13 @@ jobs:
               return;
             }
 
+            // Skip self-assign for repo owner (zero notification policy)
+            const isOwner = issueAuthor === context.repo.owner;
+            if (isOwner) {
+              core.info(`Skipping self-assign for repo owner ${issueAuthor}`);
+              return;
+            }
+
             const currentAssignees = issue.assignees.map(a => a.login);
             if (currentAssignees.includes(issueAuthor)) {
               core.info(`Issue #${issue.number} already assigned to ${issueAuthor}`);
@@ -70,16 +77,22 @@ jobs:
           script: |
             const pr = context.payload.pull_request;
 
-            // Auto-assign PR author
-            const currentAssignees = pr.assignees.map(a => a.login);
-            if (!currentAssignees.includes(pr.user.login)) {
-              await github.rest.issues.addAssignees({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: pr.number,
-                assignees: [pr.user.login]
-              });
-              core.info(`Assigned ${pr.user.login} to PR #${pr.number}`);
+            // Auto-assign PR author (skip repo owner to avoid notifications)
+            const prAuthor = pr.user.login;
+            const isOwner = prAuthor === context.repo.owner;
+            if (!isOwner) {
+              const currentAssignees = pr.assignees.map(a => a.login);
+              if (!currentAssignees.includes(prAuthor)) {
+                await github.rest.issues.addAssignees({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  assignees: [prAuthor]
+                });
+                core.info(`Assigned ${prAuthor} to PR #${pr.number}`);
+              }
+            } else {
+              core.info(`Skipping self-assign for repo owner ${prAuthor}`);
             }
 
             // Detect linked issues from PR body (Fixes #N, Closes #N, Resolves #N)
@@ -166,7 +179,7 @@ jobs:
             const mergeComment = [
               `✅ Resolved by #${pr.number}`,
               '',
-              `**Merged by:** @${pr.merged_by?.login || pr.user.login}`,
+              `**Merged by:** ${pr.merged_by?.login || pr.user.login}`,
               `**Branch:** \`${pr.head.ref}\` → \`${pr.base.ref}\``,
               `**Risk:** ${pr.labels.find(l => l.name.startsWith('risk:'))?.name || 'unclassified'}`
             ].join('\n');
