@@ -75,6 +75,10 @@ group:
         dest: .github/workflows/auto-approve-runs.yml
       - source: .github/workflows/dependabot-auto-fix.yml
         dest: .github/workflows/dependabot-auto-fix.yml
+      - source: .github/workflows/branch-cleanup.yml
+        dest: .github/workflows/branch-cleanup.yml
+      - source: .github/workflows/codex-pr-review.yml
+        dest: .github/workflows/codex-pr-review.yml
     repos: |
       qws941/aimo3-prize
       qws941/blacklist
