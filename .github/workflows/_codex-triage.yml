@@ -154,17 +154,18 @@ jobs:
               core.warning(`Failed to assign Codex: ${error.message}`);
             }
 
-            // Defensive: remove repo owner if somehow assigned (race condition guard)
+            // Defensive: always remove repo owner (webhook payload assignees are stale)
             const owner = context.repo.owner;
-            const currentAssignees = issue.assignees.map(a => a.login);
-            if (currentAssignees.includes(owner)) {
+            try {
               await github.rest.issues.removeAssignees({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
                 assignees: [owner],
               });
-              core.info(`Removed owner ${owner} from issue #${issue.number}`);
+              core.info(`Ensured owner ${owner} is not assigned to issue #${issue.number}`);
+            } catch (e) {
+              core.warning(`Failed to remove owner: ${e.message}`);
             }
 
             // Add 'codex' label for tracking and downstream triggers
