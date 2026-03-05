@@ -69,7 +69,7 @@ jobs:
               const vulnerableRange = alert.security_vulnerability?.vulnerable_version_range || '';
               const firstPatchedVersion = alert.security_vulnerability?.first_patched_version?.identifier || 'none available';
 
-              const issueTitle = `[Dependabot] Fix ${pkg} vulnerability (${severity})`;
+              const issueTitle = `[Dependabot] Fix ${pkg} vulnerability (${ghsaId || severity})`;
 
               // Dedup: skip if issue with same title already exists
               if (existingTitles.some(t => t === issueTitle)) {
@@ -99,9 +99,31 @@ jobs:
                 '',
                 `### Suggested Fix Steps`,
                 '',
-                `1. Update \`${pkg}\` to \`>=${firstPatchedVersion}\` in \`package.json\` (or add an \`overrides\` entry if a transitive dependency)`,
-                `2. Run \`npm install\` to regenerate \`package-lock.json\``,
-                `3. Verify the resolved version with \`npm ls ${pkg}\``,
+                ...(ecosystem === 'npm' ? [
+                  `1. Update \`${pkg}\` to \`>=${firstPatchedVersion}\` in \`package.json\` (or add an \`overrides\` entry if a transitive dependency)`,
+                  `2. Run \`npm install\` to regenerate \`package-lock.json\``,
+                  `3. Verify the resolved version with \`npm ls ${pkg}\``,
+                ] : ecosystem === 'pip' ? [
+                  `1. Update \`${pkg}\` to \`>=${firstPatchedVersion}\` in \`requirements.txt\` or \`pyproject.toml\``,
+                  `2. Run \`pip install -r requirements.txt\` to install the updated dependency`,
+                  `3. Verify the resolved version with \`pip show ${pkg}\``,
+                ] : ecosystem === 'maven' ? [
+                  `1. Update \`${pkg}\` to \`>=${firstPatchedVersion}\` in \`pom.xml\``,
+                  `2. Run \`mvn dependency:resolve\` to verify resolution`,
+                  `3. Verify the resolved version with \`mvn dependency:tree -Dincludes=${pkg}\``,
+                ] : ecosystem === 'nuget' ? [
+                  `1. Update \`${pkg}\` to \`>=${firstPatchedVersion}\` in the \`.csproj\` file`,
+                  `2. Run \`dotnet restore\` to install the updated dependency`,
+                  `3. Verify the resolved version with \`dotnet list package\``,
+                ] : ecosystem === 'go' ? [
+                  `1. Update \`${pkg}\` to \`>=${firstPatchedVersion}\` with \`go get ${pkg}@v${firstPatchedVersion}\``,
+                  `2. Run \`go mod tidy\` to clean up the module file`,
+                  `3. Verify the resolved version with \`go list -m ${pkg}\``,
+                ] : [
+                  `1. Update \`${pkg}\` to \`>=${firstPatchedVersion}\` in the project dependency file`,
+                  `2. Install/resolve dependencies using the ecosystem's package manager`,
+                  `3. Verify the resolved version`,
+                ]),
                 `4. Run tests to ensure nothing is broken`,
                 `5. Create a PR with the fix`,
                 '',
