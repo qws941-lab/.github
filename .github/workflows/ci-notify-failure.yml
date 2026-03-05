@@ -20,3 +20,4 @@ jobs:
   notify:
     if: github.event.workflow_run.conclusion == 'failure'
     uses: qws941/.github/.github/workflows/_ci-notify-failure.yml@master
+    secrets: inherit

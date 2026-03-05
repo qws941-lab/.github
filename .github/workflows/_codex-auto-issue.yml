@@ -27,6 +27,7 @@ jobs:
       - name: Comment and assign Codex
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
+          github-token: ${{ secrets.GH_PAT }}
           script: |
             const title = context.payload.issue.title;
             const body = context.payload.issue.body || '';

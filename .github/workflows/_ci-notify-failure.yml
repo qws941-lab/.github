@@ -47,6 +47,7 @@ jobs:
           INPUT_EXTRA_BODY: ${{ inputs.extra-body }}
           INPUT_LABELS: ${{ inputs.labels }}
         with:
+          github-token: ${{ secrets.GH_PAT }}
           script: |
             const today = new Date().toISOString().split('T')[0];
             const serverUrl = context.serverUrl;
