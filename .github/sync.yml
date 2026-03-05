@@ -79,6 +79,10 @@ group:
         dest: .github/workflows/codex-pr-normalize.yml
       - source: .github/workflows/codex-issue-timeout.yml
         dest: .github/workflows/codex-issue-timeout.yml
+      - source: .github/workflows/branch-cleanup.yml
+        dest: .github/workflows/branch-cleanup.yml
+      - source: .github/workflows/codex-pr-review.yml
+        dest: .github/workflows/codex-pr-review.yml
     repos: |
       qws941/aimo3-prize
       qws941/blacklist
