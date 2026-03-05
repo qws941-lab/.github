@@ -1,0 +1,121 @@
+name: Codex PR Normalize
+
+on:
+  workflow_call:
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.pull_request.user.login == 'Codex' ||
+      github.event.pull_request.user.login == 'openai-code-agent[bot]' ||
+      github.event.pull_request.user.login == 'chatgpt-codex-connector[bot]'
+    steps:
+      - name: Normalize PR title and link issues
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const title = pr.title;
+            const body = pr.body || '';
+            const branch = pr.head.ref;
+
+            const conventionalRe = /^(feat|fix|docs|refactor|test|ci|chore|perf|build|revert)(\(.+\))?!?:\s/;
+            const needsTitleFix = !conventionalRe.test(title);
+
+            let newTitle = title;
+            if (needsTitleFix) {
+              // Determine type from branch prefix
+              let type = 'fix';
+              if (/^codex\/(add|feat)-/.test(branch)) type = 'feat';
+              else if (/^codex\/docs-/.test(branch)) type = 'docs';
+              else if (/^codex\/refactor-/.test(branch)) type = 'refactor';
+              else if (/^codex\/test-/.test(branch)) type = 'test';
+              else if (/^codex\/(ci|workflow)-/.test(branch)) type = 'ci';
+              else if (/^codex\/(chore|update)-/.test(branch)) type = 'chore';
+
+              // Strip redundant leading verb, clean trailing period
+              let clean = title
+                .replace(/^(Fix|Ensure|Resolve|Address|Handle|Add|Update|Remove|Implement|Create)\s+/i, '')
+                .replace(/\.+$/, '');
+
+              // Lowercase first char unless it starts an acronym (e.g. ELK, API)
+              if (/^[A-Z][a-z]/.test(clean)) {
+                clean = clean.charAt(0).toLowerCase() + clean.slice(1);
+              }
+
+              newTitle = `${type}: ${clean}`;
+            }
+
+            // Find linked issue by keyword matching against codex-labeled issues
+            let linkedIssue = null;
+            const hasCloseRef = /(?:Closes|Fixes|Resolves)\s+#\d+/i.test(body);
+
+            if (!hasCloseRef) {
+              const keywords = branch
+                .replace(/^codex\/[a-z]+-/, '')
+                .split('-')
+                .filter(w => w.length > 2)
+                .slice(0, 5);
+
+              if (keywords.length >= 2) {
+                const { data: issues } = await github.rest.issues.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: 'codex',
+                  state: 'open',
+                  per_page: 50
+                });
+
+                let bestScore = 0;
+                for (const issue of issues) {
+                  if (issue.pull_request) continue;
+                  const words = issue.title.toLowerCase().split(/[\s\-_]+/);
+                  const score = keywords.filter(kw =>
+                    words.some(w => w.includes(kw) || kw.includes(w))
+                  ).length;
+                  if (score > bestScore && score >= 2) {
+                    bestScore = score;
+                    linkedIssue = issue;
+                  }
+                }
+              }
+            }
+
+            // Apply updates
+            const update = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            };
+
+            let changed = false;
+
+            if (needsTitleFix) {
+              update.title = newTitle;
+              changed = true;
+              console.log(`Title: "${title}" → "${newTitle}"`);
+            }
+
+            if (linkedIssue) {
+              update.body = `${body}\n\nCloses #${linkedIssue.number}`.trim();
+              changed = true;
+              console.log(`Linked to issue #${linkedIssue.number}: ${linkedIssue.title}`);
+            }
+
+            if (changed) {
+              await github.rest.pulls.update(update);
+            }
+
+            // Ensure codex + auto-merge labels
+            const existing = pr.labels.map(l => l.name);
+            const add = ['codex', 'auto-merge'].filter(l => !existing.includes(l));
+            if (add.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: add
+              });
+              console.log(`Added labels: ${add.join(', ')}`);
+            }
