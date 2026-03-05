@@ -3,6 +3,7 @@ name: Sync Common Files
 on:
   push:
     branches: [master]
+    paths:
       # Governance
       - 'OWNERS'
       - 'LICENSE'
