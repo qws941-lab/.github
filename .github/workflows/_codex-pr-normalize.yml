@@ -122,3 +122,15 @@ jobs:
               });
               console.log(`Added labels: ${add.join(', ')}`);
             }
+
+            // Undraft if PR is a draft — required for auto-merge
+            if (pr.draft) {
+              await github.graphql(`
+                mutation($id: ID!) {
+                  markPullRequestReadyForReview(input: { pullRequestId: $id }) {
+                    pullRequest { isDraft }
+                  }
+                }
+              `, { id: pr.node_id });
+              console.log('Marked PR as ready for review (was draft)');
+            }
